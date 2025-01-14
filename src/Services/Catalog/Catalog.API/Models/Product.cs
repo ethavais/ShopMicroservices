@@ -9,6 +9,5 @@
         public decimal Price { get; set; }
 
         public List<string> Category = new();
-        
     }
 }
