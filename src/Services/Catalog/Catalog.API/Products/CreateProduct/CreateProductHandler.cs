@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using BuildingBlocks.CQRS;
+using MediatR;
 
 namespace Catalog.API.Products.CreateProduct
 {
@@ -10,13 +11,15 @@ namespace Catalog.API.Products.CreateProduct
         string ImageFile,
         decimal Price,
         List<string> Category
-    ) : IRequest<CreateProductResult>;
+    ) : ICommand<CreateProductResult>;
 
 
     internal class CreateProductCommandHandler : 
-        IRequestHandler<CreateProductCommand, CreateProductResult>
+        ICommandHandler<CreateProductCommand, CreateProductResult>
     {
-        public Task<CreateProductResult> Handle(CreateProductCommand request, CancellationToken cancellationToken)
+        public Task<CreateProductResult> Handle(
+            CreateProductCommand command, 
+            CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
