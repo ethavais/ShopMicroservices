@@ -1,7 +1,14 @@
 var builder = WebApplication.CreateBuilder(args);
 
-//Add Services to container 
 
+
+#region Add Services
+builder.Services.AddCarter();
+builder.Services.AddMediatR(config =>
+{
+    config.RegisterServicesFromAssembly(typeof(Program).Assembly);
+});
+#endregion
 
 
 
@@ -9,5 +16,10 @@ var app = builder.Build();
 
 
 
-// Config HTTP request
+#region Config HTTP request
+app.MapCarter();
+#endregion
+
+
+
 app.Run();
