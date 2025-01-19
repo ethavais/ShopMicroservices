@@ -33,6 +33,14 @@ namespace Catalog.API.Products.CreateProduct
         {
             var createProduct = command.MapToProduct();
 
+            // Log the created product to the console
+            Console.WriteLine("\n\n\nCreated Product: ");
+            Console.WriteLine($"Name: {createProduct.Name}");
+            Console.WriteLine($"Description: {createProduct.Description}");
+            Console.WriteLine($"Image File: {createProduct.ImageFile}");
+            Console.WriteLine($"Price: {createProduct.Price}");
+            Console.WriteLine($"Category: {string.Join(", ", createProduct.Category)}");
+
             return new CreateProductResult(Guid.NewGuid()); 
         }
     }
