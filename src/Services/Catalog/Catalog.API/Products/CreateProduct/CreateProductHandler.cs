@@ -1,5 +1,5 @@
 ﻿using BuildingBlocks.CQRS;
-using MediatR;
+using Catalog.API.Models;
 
 namespace Catalog.API.Products.CreateProduct
 {
@@ -11,17 +11,29 @@ namespace Catalog.API.Products.CreateProduct
         string ImageFile,
         decimal Price,
         List<string> Category
-    ) : ICommand<CreateProductResult>;
+    ) : ICommand<CreateProductResult>, IProductMappable
+    {
+        public Product MapToProduct()
+            => new Product
+            {
+                Name = Name,
+                Description = Description,
+                ImageFile = ImageFile,
+                Price = Price,
+                Category = Category
+            };
+    }
 
-
-    internal class CreateProductCommandHandler : 
+    public class CreateProductCommandHandler : 
         ICommandHandler<CreateProductCommand, CreateProductResult>
     {
-        public Task<CreateProductResult> Handle(
+        public async Task<CreateProductResult> Handle(
             CreateProductCommand command, 
             CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var createProduct = command.MapToProduct();
+
+            return new CreateProductResult(Guid.NewGuid()); 
         }
     }
 }
