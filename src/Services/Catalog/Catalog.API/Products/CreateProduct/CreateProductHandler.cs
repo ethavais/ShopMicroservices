@@ -1,7 +1,4 @@
-﻿using BuildingBlocks.CQRS;
-using Catalog.API.Models;
-
-namespace Catalog.API.Products.CreateProduct
+﻿namespace Catalog.API.Products.CreateProduct
 {
     public record CreateProductResult(Guid Id);
 
@@ -24,7 +21,7 @@ namespace Catalog.API.Products.CreateProduct
             };
     }
 
-    public class CreateProductCommandHandler : 
+    public class CreateProductCommandHandler(IDocumentSession session) : 
         ICommandHandler<CreateProductCommand, CreateProductResult>
     {
         public async Task<CreateProductResult> Handle(
@@ -33,15 +30,19 @@ namespace Catalog.API.Products.CreateProduct
         {
             var createProduct = command.MapToProduct();
 
-            // Log the created product to the console
+            session.Store(createProduct);
+            await session.SaveChangesAsync(cancellationToken);
+
+            #region Console check
             Console.WriteLine("\n\n\nCreated Product: ");
             Console.WriteLine($"Name: {createProduct.Name}");
             Console.WriteLine($"Description: {createProduct.Description}");
             Console.WriteLine($"Image File: {createProduct.ImageFile}");
             Console.WriteLine($"Price: {createProduct.Price}");
             Console.WriteLine($"Category: {string.Join(", ", createProduct.Category)}");
+            #endregion
 
-            return new CreateProductResult(Guid.NewGuid()); 
+            return new CreateProductResult(createProduct.Id); 
         }
     }
 }
