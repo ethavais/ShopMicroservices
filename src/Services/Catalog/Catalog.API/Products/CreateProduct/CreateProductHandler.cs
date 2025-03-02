@@ -8,17 +8,13 @@
         string ImageFile,
         decimal Price,
         List<string> Category
-    ) : ICommand<CreateProductResult>, IProductMappable
+    ) : IProductCreateValidation, ICommand<CreateProductResult>
     {
-        public Product MapToProduct()
-            => new Product
-            {
-                Name = Name,
-                Description = Description,
-                ImageFile = ImageFile,
-                Price = Price,
-                Category = Category
-            };
+        public bool Validate(out List<string> errors)
+        {
+            errors = new List<string>();
+            return this.ValidateForCreate(errors);
+        }
     }
 
     public class CreateProductCommandHandler(IDocumentSession session) : 
@@ -28,21 +24,21 @@
             CreateProductCommand command, 
             CancellationToken cancellationToken)
         {
-            var createProduct = command.MapToProduct();
-
-            session.Store(createProduct);
+            var product = Product.Create(command);
+            
+            session.Store(product);
             await session.SaveChangesAsync(cancellationToken);
 
             #region Console check
             Console.WriteLine("\n\n\nCreated Product: ");
-            Console.WriteLine($"Name: {createProduct.Name}");
-            Console.WriteLine($"Description: {createProduct.Description}");
-            Console.WriteLine($"Image File: {createProduct.ImageFile}");
-            Console.WriteLine($"Price: {createProduct.Price}");
-            Console.WriteLine($"Category: {string.Join(", ", createProduct.Category)}");
+            Console.WriteLine($"Name: {product.Name}");
+            Console.WriteLine($"Description: {product.Description}");
+            Console.WriteLine($"Image File: {product.ImageFile}");
+            Console.WriteLine($"Price: {product.Price}");
+            Console.WriteLine($"Category: {string.Join(", ", product.Category)}");
             #endregion
 
-            return new CreateProductResult(createProduct.Id); 
+            return new CreateProductResult(product.Id); 
         }
     }
 }

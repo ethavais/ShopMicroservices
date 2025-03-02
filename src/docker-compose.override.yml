@@ -10,5 +10,6 @@ services:
     restart: always
     ports:
       - "5432:5432"
+# don's sure about port
     volumes:
       - postgres_catalog:/var/lib/postgresql/data/

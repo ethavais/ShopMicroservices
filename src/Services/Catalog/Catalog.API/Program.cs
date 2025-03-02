@@ -1,29 +1,13 @@
+using Catalog.API.Configuration;
+
 var builder = WebApplication.CreateBuilder(args);
 
-ConfigureServices(builder, builder.Services);
+// Sử dụng các extension methods từ các lớp cấu hình
+builder.Services.ConfigureApiServices();
+builder.Services.ConfigureDatabaseServices(builder.Configuration, builder.Environment);
 
 var app = builder.Build();
 
-ConfigureMiddleware(app);
+app.ConfigureMiddleware(builder.Environment);
 
 app.Run();
-
-void ConfigureServices(WebApplicationBuilder builder, IServiceCollection services)
-{
-    services.AddCarter();
-
-    services.AddMediatR(config =>
-    {
-        config.RegisterServicesFromAssembly(typeof(Program).Assembly);
-    });
-
-    services.AddMarten(opts =>
-    {
-        opts.Connection(builder.Configuration.GetConnectionString("DB")!);
-    }).UseLightweightSessions();
-}
-
-void ConfigureMiddleware(WebApplication app)
-{
-    app.MapCarter();
-}

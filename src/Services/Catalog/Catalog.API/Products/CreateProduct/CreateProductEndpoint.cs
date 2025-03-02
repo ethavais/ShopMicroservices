@@ -1,13 +1,22 @@
 ﻿namespace Catalog.API.Products.CreateProduct
 {
+    public record CreateProductResponse(Guid Id);
+
     public record CreateProductRequest(
         string Name,
         string Description,
         string ImageFile,
         decimal Price,
-        List<string> Category);
+        List<string> Category
+    ) : IProductCreateValidation
+    {
+        public bool Validate(out List<string> errors)
+        {
+            errors = new List<string>();
+            return this.ValidateForCreate(errors);
+        }
+    }
 
-    public record CreateProductResponse(Guid Id);
 
     public class CreateProductEndpoint : ICarterModule
     {
@@ -31,15 +40,15 @@
                 .WithSummary("Create Product")
                 .WithDescription("Create Product");
 
-                #region Test Postman
-                //{
-                //    "Name": "Demo Product",
-                //    "Description": "Test testing.",
-                //    "ImageFile": "test-product.jpg",
-                //    "Price": 79.99,
-                //    "Category": ["Electronics", "Gadgets"]
-                //}
-                #endregion
+            #region Test Postman
+            //{
+            //    "Name": "Demo Product",
+            //    "Description": "Test testing.",
+            //    "ImageFile": "test-product.jpg",
+            //    "Price": 79.99,
+            //    "Category": ["Electronics", "Gadgets"]
+            //}
+            #endregion
         }
     }
 }
