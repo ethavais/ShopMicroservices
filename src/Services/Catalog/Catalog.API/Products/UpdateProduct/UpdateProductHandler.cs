@@ -30,26 +30,19 @@ namespace Catalog.API.Products.UpdateProduct
             
             try
             {
-                // Using a more efficient direct query with version check
                 var product = await session.LoadAsync<Product>(command.Id, cancellationToken);
                 
                 if (product is null)
                     throw new Exception($"Product not found with ID: {command.Id}");
                 
-                // Apply the updates
                 product.Update(command);
-                
-                // Store the updated product
                 session.Store(product);
-                
-                // Commit changes in one transaction
                 await session.SaveChangesAsync(cancellationToken);
                 
                 return new UpdateProductResult(command.Id);
             }
             catch (Marten.Exceptions.ConcurrencyException ex)
             {
-                // Log the concurrency conflict
                 Console.WriteLine($"Concurrency conflict detected for product {command.Id}: {ex.Message}");
                 throw new Exception($"The product was modified by another user. Please refresh and try again.", ex);
             }

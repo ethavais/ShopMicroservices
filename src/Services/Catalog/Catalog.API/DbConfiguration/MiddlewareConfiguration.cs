@@ -1,6 +1,6 @@
 using BuildingBlocks.Database;
 
-namespace Catalog.API.Configuration
+namespace Catalog.API.DbConfiguration
 {
     public static class MiddlewareConfiguration
     {
@@ -10,7 +10,6 @@ namespace Catalog.API.Configuration
         {
             app.MapCarter();
             
-            // Sử dụng middleware giám sát từ BuildingBlocks
             app.UseDataBaseMonitoring(environment);
         }
     }

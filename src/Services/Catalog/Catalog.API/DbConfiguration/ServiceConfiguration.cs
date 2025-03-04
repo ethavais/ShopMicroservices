@@ -1,6 +1,4 @@
-using Microsoft.Extensions.DependencyInjection;
-
-namespace Catalog.API.Configuration
+namespace Catalog.API.DbConfiguration
 {
     public static class ServiceConfiguration
     {

@@ -1,4 +1,3 @@
-using System;
 using Marten;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -24,18 +23,14 @@ namespace BuildingBlocks.Database
             {
                 var opts = new StoreOptions();
                 opts.Connection(connectionString);
-                
-                // 1. Tối ưu hóa Schema Migration dựa trên môi trường
+
+                // 1. Optimz Schema Migration base on env
                 if (environment.IsProduction())
-                {
                     opts.AutoCreateSchemaObjects = AutoCreate.None;
-                }
                 else
-                {
                     opts.AutoCreateSchemaObjects = AutoCreate.CreateOrUpdate;
-                }
-                
-                // 2. Tối ưu Document Storage với System.Text.Json
+
+                // 2. Optimz Document Storage with System.Text.Json
                 var jsonOptions = new System.Text.Json.JsonSerializerOptions
                 {
                     DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
@@ -43,23 +38,13 @@ namespace BuildingBlocks.Database
                     WriteIndented = false // Minimize JSON size
                 };
                 opts.Serializer(new SystemTextJsonSerializer(jsonOptions));
-                // 3. Tối ưu hóa Command Timeout
+                // 3. Optimz Command Timeout
                 opts.CommandTimeout = 30;
                 
-                // 4. Session Resource Stripping đã được bật mặc định với UseLightweightSessions()
-                
-                // 5. Tắt PLV8 nếu không cần thiết
-                // opts.PLV8Enabled = false;
-                
-                // 6. Bật Diagnostics trong môi trường phi Production
                 if (!environment.IsProduction())
-                {
-                    //opts.EnableDiagnostics = true;
                     opts.DisableNpgsqlLogging = true;
 
-                }
-
-                // Cho phép cấu hình bổ sung từ service cụ thể
+                // Allow config from specific Service
                 additionalConfiguration?.Invoke(opts);
 
                 return opts;
