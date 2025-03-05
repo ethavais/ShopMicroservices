@@ -29,16 +29,17 @@
             session.Store(product);
             await session.SaveChangesAsync(cancellationToken);
 
-            #region Console check
-            Console.WriteLine("\n\n\nCreated Product: ");
-            Console.WriteLine($"Name: {product.Name}");
-            Console.WriteLine($"Description: {product.Description}");
-            Console.WriteLine($"Image File: {product.ImageFile}");
-            Console.WriteLine($"Price: {product.Price}");
-            Console.WriteLine($"Category: {string.Join(", ", product.Category)}");
-            #endregion
-
             return new CreateProductResult(product.Id); 
         }
     }
 }
+
+
+            #region Console check
+            // Console.WriteLine("\n\n\nCreated Product: ");
+            // Console.WriteLine($"Name: {product.Name}");
+            // Console.WriteLine($"Description: {product.Description}");
+            // Console.WriteLine($"Image File: {product.ImageFile}");
+            // Console.WriteLine($"Price: {product.Price}");
+            // Console.WriteLine($"Category: {string.Join(", ", product.Category)}");
+            #endregion

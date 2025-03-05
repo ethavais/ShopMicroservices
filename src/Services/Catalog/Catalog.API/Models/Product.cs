@@ -1,4 +1,5 @@
-﻿using Catalog.API.Products;
+﻿using Catalog.API.Products.CreateProduct;
+using Catalog.API.Products.UpdateProduct;
 
 namespace Catalog.API.Models
 {

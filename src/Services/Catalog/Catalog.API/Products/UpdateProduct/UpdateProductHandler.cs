@@ -1,6 +1,6 @@
 namespace Catalog.API.Products.UpdateProduct
 {
-    public record UpdateProductResult(Guid Id);
+    public record UpdateProductResult(bool IsSuccess);
 
     public record UpdateProductCommand(
         Guid Id,
@@ -39,17 +39,17 @@ namespace Catalog.API.Products.UpdateProduct
                 session.Store(product);
                 await session.SaveChangesAsync(cancellationToken);
                 
-                return new UpdateProductResult(command.Id);
+                return new UpdateProductResult(true);
             }
             catch (Marten.Exceptions.ConcurrencyException ex)
             {
                 Console.WriteLine($"Concurrency conflict detected for product {command.Id}: {ex.Message}");
-                throw new Exception($"The product was modified by another user. Please refresh and try again.", ex);
+                return new UpdateProductResult(false);
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error updating product {command.Id}: {ex.Message}");
-                throw;
+                return new UpdateProductResult(false);
             }
             finally
             {

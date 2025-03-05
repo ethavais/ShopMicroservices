@@ -1,6 +1,6 @@
 namespace Catalog.API.Products.UpdateProduct
 {
-    public record UpdateProductResponse(Guid Id);
+    public record UpdateProductResponse(bool IsSuccess);
     
     public record UpdateProductRequest(
         Guid Id,
@@ -28,11 +28,16 @@ namespace Catalog.API.Products.UpdateProduct
                 {
                     var command = request.Adapt<UpdateProductCommand>();
                     var result = await sender.Send(command);
-                    return Results.Ok(result.Adapt<UpdateProductResponse>());
+                    var response = result.Adapt<UpdateProductResponse>();
+
+                    return Results.Ok(response);
                 })
                 .WithName("UpdateProduct")
                 .Produces<UpdateProductResponse>(StatusCodes.Status200OK)
-                .ProducesProblem(StatusCodes.Status400BadRequest);
+                .ProducesProblem(StatusCodes.Status400BadRequest)
+                .ProducesProblem(StatusCodes.Status404NotFound)
+                .WithSummary("Update Product")
+                .WithDescription("Update a product");
         }
     }
 } 

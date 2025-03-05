@@ -17,7 +17,6 @@
         }
     }
 
-
     public class CreateProductEndpoint : ICarterModule
     {
         public void AddRoutes(IEndpointRouteBuilder app)
@@ -39,16 +38,6 @@
                 .ProducesProblem(StatusCodes.Status400BadRequest)
                 .WithSummary("Create Product")
                 .WithDescription("Create Product");
-
-            #region Test Postman
-            //{
-            //    "Name": "Demo Product",
-            //    "Description": "Test testing.",
-            //    "ImageFile": "test-product.jpg",
-            //    "Price": 79.99,
-            //    "Category": ["Electronics", "Gadgets"]
-            //}
-            #endregion
         }
     }
 }
